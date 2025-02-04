@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz Capitales Africaines</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+
+</head>
+
+<body class="d-flex align-items-center justify-content-center vh-100">
+
+    <div class="d-flex align-items-center justify-content-center vh-100"">
+
+        <div class=" bg-white p-4 rounded shadow w-80 text-black text-center">
+        <h1 class="fw-bold">Quiz Capitales Africaines</h1>
+        <div id="quiz-container" class="mt-4">
+            <img id="flag" alt="Drapeau" class="w-50 mx-auto mb-3">
+            <p id="question" class="fw-semibold"></p>
+            <p id="timer" class="fw-old text-danger">Temps restant : 30s</p>
+            <div id="options" class="mt-3 d-grid gap-2"></div>
+            <p id="feedback" class="mt-3 fw-bold"></p>
+        </div>
+
+        <div id="score-container" class="mt-4 d-none">
+            <p id="final-score" class="fw-bold"></p>
+            <button class="btn btn-primary" onclick="restartQuiz()">Rejouer</button>
+        </div>
+
+    </div>
+    </div>
+
+    </div>
+
+
+    <script>
+
+        const questions = [
+            { country: "Sénégal", capital: "Dakar", flag: "https://flagcdn.com/w320/sn.png" },
+            { country: "Côte d'Ivoire", capital: "Yamoussoukro", flag: "https://flagcdn.com/w320/ci.png" },
+            { country: "Maroc", capital: "Rabat", flag: "https://flagcdn.com/w320/ma.png" },
+            { country: "Nigéria", capital: "Abuja", flag: "https://flagcdn.com/w320/ng.png" },
+            { country: "Afrique du Sud", capital: "Pretoria", flag: "https://flagcdn.com/w320/za.png" },
+            { country: "Kenya", capital: "Nairobi", flag: "https://flagcdn.com/w320/ke.png" },
+            { country: "Ghana", capital: "Accra", flag: "https://flagcdn.com/w320/gh.png" },
+            { country: "Éthiopie", capital: "Addis-Abeba", flag: "https://flagcdn.com/w320/et.png" },
+            { country: "Tunisie", capital: "Tunis", flag: "https://flagcdn.com/w320/tn.png" },
+            { country: "Cameroun", capital: "Yaoundé", flag: "https://flagcdn.com/w320/cm.png" }
+        ];
+
+        //Les éléments du DOM à minipuler
+        const questionElement = document.getElementById('question');
+        const flagElement = document.getElementById('flag');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const scoreContainer = document.getElementById('score-container');
+        const timerElement = document.getElementById('timer');
+        const finalScoreElement = document.getElementById('final-score');
+
+        //Déclaration des variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft;
+
+
+        //Les fonctions
+
+        function startTimer() {
+            timeLeft = 30;
+            timerElement.textContent = `Temps restant : ${timeLeft}`;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = `Temps restant : ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    autoFailQuestion();
+                }
+            }, 1000)
+
+        }
+
+        function autoFailQuestion() {
+            feedbackElement.textContent = `Temps écoulé ! 😢`;
+            feedbackElement.className = "text-danger";
+            setTimeout(() => {
+                feedbackElement.textContent = "";
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 1500)
+        }
+
+        function loadQuestion() {
+
+            if (currentQuestionIndex >= questions.length) {
+                showFinalScore();
+                return;
+            }
+
+
+            let currentQuestion = questions[currentQuestionIndex];
+            flagElement.src = currentQuestion.flag;
+            questionElement.textContent = `Quelle est la capital de ${currentQuestion.country}?`
+
+            let answers = [currentQuestion.capital];
+
+            while (answers.length < 4) {
+                let randomCapital = questions[Math.floor(Math.random() * questions.length)].capital
+                if (!answers.includes(randomCapital)) {
+                    answers.push(randomCapital);
+                }
+            }
+
+            answers.sort(() => Math.random() - 0.5);
+
+            optionsElement.innerHTML = "";
+            answers.forEach(answer => {
+                let button = document.createElement('button');
+                button.textContent = answer;
+                button.className = "btn btn-success";
+                button.id = answer;
+                button.onclick = () => checkAnswer(answer, currentQuestion.capital)
+                optionsElement.appendChild(button)
+            })
+
+            startTimer();
+
+        }
+
+        function checkAnswer(selected, correct) {
+            clearInterval(timer);
+            if (selected == correct) {
+                feedbackElement.textContent = "Correct ! 🎉";
+                feedbackElement.className = "text-success";
+                score++;
+            }
+            else {
+                const btn = document.getElementById(selected);
+                btn.className = "btn btn-danger";
+                feedbackElement.textContent = "Faux. 😢";
+                feedbackElement.className = "text-danger";
+            }
+
+            setTimeout(() => {
+                feedbackElement.textContent = "";
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 1500)
+        }
+
+        function showFinalScore() {
+            clearInterval(timer);
+            document.getElementById('quiz-container').classList.add("d-none");
+            scoreContainer.classList.remove("d-none");
+            finalScoreElement.textContent = `Votre score final est de ${score}/${questions.length}`;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreContainer.classList.add("d-none");
+            document.getElementById('quiz-container').classList.remove("d-none");
+            loadQuestion();
+
+        }
+
+
+
+        loadQuestion();
+    </script>
+
+</body>
+
+</html>
