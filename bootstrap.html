@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Cours Bootstrap</title>
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="col-lg-4 col-sm-12 bg-success">Vert</div>
+        <div class="col-lg-4 col-sm-12 bg-warning">Jaune</div>
+        <div class="col-lg-4 col-sm-12 bg-danger">Rouge</div>
+    </div>
+
+
+    <img src="default.jpg" alt="" class="img img-thumbnail rounded-circle float-end">
+
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>@twitter</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- margin m mt:margin-top ml mr mb mt-1 -->
+
+    <!-- padding p pt pl pr ... p-4 -->
+
+    <!-- w  -->
+
+    <p class="h1">Bonjour</p>
+
+    <form action="">
+        <div class="row mt-2">
+            <div class="col-8 offset-2">
+                <label for="email" class="text-danger">Email</label>
+                <input type="email" name="email" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-8 offset-2">
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-2 offset-2"><button class="btn btn-primary">Se connecter</button></div>
+        </div>
+
+
+
+    </form>
+
+    <select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
