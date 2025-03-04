@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Films</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .movie-card {
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .movie-poster {
+            height: 300px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <div class="container py-5">
+        <h1 class="text-center mb-5">🎬 Découvrez des Films</h1>
+        
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un film...">
+                    <button class="btn btn-primary" id="searchButton">
+                        <i class="fas fa-search"></i> Rechercher
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="movieResults">
+            <!-- Les résultats seront affichés ici -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    
+    <script>
+        $(document).ready(function() {
+            const apiKey = '3fd2be6f0c70a2a598f084ddfb75487c';
+            const baseUrl = 'https://api.themoviedb.org/3';
+            const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+
+            function searchMovies(query) {
+                $.ajax({
+                    url: `${baseUrl}/search/movie`,
+                    data: {
+                        api_key: apiKey,
+                        query: query,
+                        language: 'fr-FR'
+                    },
+                    method: 'GET',
+                    success: function(response) {
+                        displayResults(response.results);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur:', error);
+                    }
+                });
+            }
+
+            function displayResults(movies) {
+                const movieResults = $('#movieResults');
+                movieResults.empty();
+
+                movies.forEach(movie => {
+                    const posterPath = movie.poster_path 
+                        ? `${imageBaseUrl}${movie.poster_path}`
+                        : 'https://via.placeholder.com/500x750?text=Pas+d%27affiche';
+
+                    const movieCard = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card movie-card bg-dark text-light border-light">
+                                <a href="details.html?id=${movie.id}" class="text-decoration-none text-light">
+                                    <img src="${posterPath}" class="card-img-top movie-poster" alt="${movie.title}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${movie.title}</h5>
+                                        <p class="card-text">${movie.overview || 'Aucune description disponible.'}</p>
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                Date de sortie: ${movie.release_date || 'Non disponible'}
+                                                <br>Note: ${movie.vote_average}/10
+                                            </small>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    movieResults.append(movieCard);
+                });
+            }
+
+            // Événement de recherche
+            $('#searchButton').click(function() {
+                const query = $('#searchInput').val().trim();
+                if (query) {
+                    searchMovies(query);
+                }
+            });
+
+            // Recherche en appuyant sur Entrée
+            $('#searchInput').keypress(function(e) {
+                if (e.which === 13) {
+                    const query = $(this).val().trim();
+                    if (query) {
+                        searchMovies(query);
+                    }
+                }
+            });
+
+            // Charger les films populaires au démarrage
+            $.ajax({
+                url: `${baseUrl}/movie/popular`,
+                data: {
+                    api_key: apiKey,
+                    language: 'fr-FR'
+                },
+                method: 'GET',
+                success: function(response) {
+                    displayResults(response.results);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation formulaire avec JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <table class="table table-bordered" id="tableau">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Genre</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <form id="formulaire">
+        <div class="row mt-5">
+            <div class="col-lg-8 offset-lg-2">
+                <div id="alert" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+                    <ul id="erreurs"></ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="col-lg-8 offset-lg-2">
+                <label for="nom">Nom :</label>
+                <input class="form-control" type="text" id="nom" name="nom" required>
+                <span id="erreurNom" class="text-danger"></span>
+            </div>
+            <div class="col-lg-8 offset-lg-2">
+                <label for="email">Email :</label>
+                <input class="form-control" type="email" id="email" name="email" required>
+                <span id="erreurEmail" class="text-danger"></span>
+            </div>
+            <div class="col-lg-8 offset-lg-2">
+                <label for="genre">Genre :</label>
+                <select class="form-control" id="genre" name="genre" required>
+                    <option value="">Choisir un genre</option>
+                    <option value="homme">Homme</option>
+                    <option value="femme">Femme</option>
+                </select>
+                <span id="erreurGenre" class="text-danger"></span>
+            </div>
+            <div class="col-lg-8 offset-lg-2">
+                <label for="password">Mot de passe :</label>
+                <input class="form-control" type="password" id="password" name="password" required>
+                <span id="erreurPassword" class="text-danger"></span>
+            </div>
+            <div class="col-lg-8 offset-lg-2">
+                <label for="password2">Confirmer le mot de passe :</label>
+                <input class="form-control" type="password" id="password2" name="password2" required>
+                <span id="erreurPassword2" class="text-danger"></span>
+            </div>
+            <div class="col-lg-8 offset-lg-2">
+                <input type="checkbox" id="accept" name="accept" required>
+                <label for="accept">Accepter les conditions d'utilisation</label>
+            </div>
+            <div class="col-lg-8 offset-lg-2 mt-3">
+                <button id="envoyer" class="btn btn-primary" type="submit">Envoyer</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        const envoyer = document.getElementById('envoyer');
+        const nom = document.getElementById('nom');
+        const email = document.getElementById('email');
+        const genre = document.getElementById('genre');
+        const password = document.getElementById('password');
+        const password2 = document.getElementById('password2');
+        const accept = document.getElementById('accept');
+        const erreurNom = document.getElementById('erreurNom');
+        const erreurEmail = document.getElementById('erreurEmail');
+        const erreurGenre = document.getElementById('erreurGenre');
+        const erreurPassword = document.getElementById('erreurPassword');
+        const erreurPassword2 = document.getElementById('erreurPassword2');
+
+        envoyer.addEventListener('click', (e) => {
+
+            e.preventDefault();
+
+            let erreurs = [];
+
+            if (nom.value === '') {
+                nom.classList.add('is-invalid');
+                erreurNom.textContent = 'Veuillez saisir votre nom';
+                erreurs.push('Veuillez saisir votre nom');
+            }
+
+            if (email.value === '') {
+                email.classList.add('is-invalid');
+                erreurEmail.textContent = 'Veuillez saisir votre email';
+                erreurs.push('Veuillez saisir votre email');
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                email.classList.add('is-invalid');
+                erreurEmail.textContent = 'Veuillez saisir un email valide';
+                erreurs.push('Veuillez saisir un email valide');
+            }
+
+            if (genre.value === '') {
+                genre.classList.add('is-invalid');
+                erreurGenre.textContent = 'Veuillez choisir un genre';
+                erreurs.push('Veuillez choisir un genre');
+            }
+
+            if (password.value === '') {
+                password.classList.add('is-invalid');
+                erreurPassword.textContent = 'Veuillez saisir votre mot de passe';
+            }
+
+            if (password.value.length < 8) {
+                password.classList.add('is-invalid');
+                erreurPassword.textContent = 'Veuillez saisir un mot de passe de plus de 8 caractères';
+                erreurs.push('Veuillez saisir un mot de passe de plus de 8 caractères');
+            }
+
+            if (password2.value === '') {
+                password2.classList.add('is-invalid');
+                erreurPassword2.textContent = 'Veuillez confirmer votre mot de passe';
+                erreurs.push('Veuillez confirmer votre mot de passe');
+            }
+
+            if (password2.value !== password.value) {
+                password2.classList.add('is-invalid');
+                erreurPassword2.textContent = 'Les mots de passe ne correspondent pas';
+                erreurs.push('Les mots de passe ne correspondent pas');
+            }
+
+            if (!accept.checked) {
+                accept.classList.add('is-invalid');
+                erreurs.push("Veuillez accepter les conditions d'utilisation");
+            }
+
+
+            if (erreurs.length > 0) {
+                const alert = document.getElementById('alert');
+                alert.classList.remove('d-none');
+                alert.querySelector('ul').innerHTML = erreurs.map(erreur => `<li>${erreur}</li>`).join('');
+            }
+
+            if (erreurs.length === 0) {
+                fetch('https://67c73afac19eb8753e791fe3.mockapi.io/ism/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nom: nom.value,
+                        email: email.value,
+                        genre: genre.value,
+                        password: btoa(password.value)
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        // Show success message
+                        alert('Inscription réussie!');
+                        afficherTableau();
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('Une erreur est survenue');
+                    });
+            }
+
+
+
+
+        });
+
+
+        function afficherTableau() {
+            fetch('https://67c73afac19eb8753e791fe3.mockapi.io/ism/user')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#tableau tbody');
+                    tbody.innerHTML = '';
+                    data.forEach(user => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${user.nom}</td>
+                                <td>${user.email}</td>
+                                <td>${user.genre}</td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        afficherTableau();
+
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
